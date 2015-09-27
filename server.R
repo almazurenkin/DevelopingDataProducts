@@ -1,12 +1,15 @@
 library(shiny)
-library(ISLR); data(Wage)
+library(markdown)
+library(ISLR)
 library(ggplot2)
+library(RcppEigen)
 library(caret)
        
 # Below code build pregiction model using Generalized Boosted Regression Models
 # algorythm based on Wage data from ISLR R package.
 # Note that Shiny run this code once when application starts.
 
+data(Wage)
 Wage <- Wage[ , names(Wage) != "logwage" & names(Wage) != "region" & names(Wage) != "year" & names(Wage) != "sex"]
         
 index.training <- createDataPartition(y = Wage$wage, p = 0.75, list = F)

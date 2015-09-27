@@ -25,10 +25,12 @@ hence there might be a delay before the application is ready for use.
 
 **Documentation** tab is the one you are on.
 
-### Data Source
+### Application Details and Data Source
 
 Application uses statistical prediction model built using
 Generalized Boosted Regression Models method from the Wage data set from the ISLR R package.
+
+GitHub repo: https://github.com/almazurenkin/DevelopingDataProducts.
 
 Data was manually assembled by Steve Miller, of Open BI (www.openbi.com),
 from the March 2011 Supplement to Current Population Survey data.
