@@ -11,13 +11,17 @@ library(caret)
 
 data(Wage)
 Wage <- Wage[ , names(Wage) != "logwage" & names(Wage) != "region" & names(Wage) != "year" & names(Wage) != "sex"]
-        
+age.range <- seq(min(Wage$age), max(Wage$age), 1)        
+
 index.training <- createDataPartition(y = Wage$wage, p = 0.75, list = F)
         
 wage.training <- Wage[index.training, ]  # training subset
 wage.validation <- Wage[-index.training, ]  # validation subset
         
-model1 <- train(wage ~ ., method = "gbm", data = wage.training)
+# model1 <- train(wage ~ ., method = "gbm", data = wage.training)
+# saveRDS(model1, "model.rds")  # Performance improvememnt mewasure: we once built a model and serialized it into "model.rds" file
+model1 <- readRDS("model.rds")  # Now instead of building a model each time, we just read it from "model.rds"
+
 # model2 <- train(wage ~ ., method = "glm", data = wage.training, verbose = F)
 # model3 <- train(wage ~ ., method = "lm", data = wage.training)
 
@@ -27,10 +31,9 @@ shinyServer(
                 # This reactive function is building prediction based on selected
                 # input parameters and is used to render output for multiple controls.
                 processor <- reactive({
-                        a <- seq(min(Wage$age), max(Wage$age), 1)
-                        
+
                         buffer <- data.frame()
-                        for (i in a) {
+                        for (i in age.range) {
                                 row <- data.frame( 
                                         'age' = i,
                                         #'sex' = as.factor(input$sex),
@@ -53,8 +56,8 @@ shinyServer(
                 output$img <- renderPlot({
                         
                         wage.prediction <- processor()
-                        
-                        img <- qplot(a, wage.prediction, geom = 'smooth', method = "loess", span = 0.33, xlab = "Age", ylab = "Wage")
+                         
+                        img <- qplot(age.range, wage.prediction, geom = 'smooth', method = "loess", span = 0.33, xlab = "Age", ylab = "Wage")
                         img + geom_vline(xintercept = input$age)       
                                                 
                 })
